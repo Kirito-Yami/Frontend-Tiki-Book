@@ -1,4 +1,4 @@
-import AppHeader from "components/layout/header.tsx";
+import AppHeader from "components/layout/app.header.tsx";
 import {Outlet} from "react-router-dom";
 
 const Layout = () => {

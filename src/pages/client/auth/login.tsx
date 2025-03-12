@@ -2,6 +2,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {App, Button, Divider, Form, FormProps, Input} from "antd";
 import {useState} from "react";
 import {loginAPI} from "services/api.ts";
+import {useCurrentApp} from "components/context/app.context.tsx";
 import 'styles/login.scss';
 
 interface FieldType {
@@ -11,6 +12,7 @@ interface FieldType {
 
 const LoginPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
+    const {setUser, setIsAuthenticated} = useCurrentApp();
     const {message, notification} = App.useApp();
     const navigate = useNavigate();
 
@@ -24,6 +26,8 @@ const LoginPage = () => {
         const res = await loginAPI(username, password);
         setIsSubmit(false);
         if (res?.data) {
+            setUser(res.data.user);
+            setIsAuthenticated(true);
             localStorage.setItem('access_token', res.data.access_token);
             message.success("Đăng nhập thành công!");
             navigate("/");
