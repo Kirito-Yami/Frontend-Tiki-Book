@@ -5,4 +5,9 @@ const loginAPI = (username: string, password: string) => {
     return axios.post<IBackendRes<ILogin>>(urlBackend, { username, password })
 }
 
-export {loginAPI}
+const registerAPI = (fullName: string, email: string, password: string, phone: number) => {
+    const urlBackend = "/api/v1/user/register";
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone })
+}
+
+export {loginAPI, registerAPI}

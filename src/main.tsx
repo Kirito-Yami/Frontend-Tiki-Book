@@ -8,38 +8,41 @@ import RegisterPage from "pages/client/auth/register.tsx";
 import HomePage from "pages/client/home.tsx";
 import 'styles/global.scss';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {App} from "antd";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout/>,
         children: [
             {
                 index: true,
-                element: <HomePage />,
+                element: <HomePage/>,
             },
             {
                 path: "book",
-                element: <BookPage />,
+                element: <BookPage/>,
             },
             {
                 path: "about",
-                element: <AboutPage />,
+                element: <AboutPage/>,
             },
         ],
     },
     {
         path: "/login",
-        element: <LoginPage />,
+        element: <LoginPage/>,
     },
     {
         path: "/register",
-        element: <RegisterPage />,
+        element: <RegisterPage/>,
     },
 ]);
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <App>
+            <RouterProvider router={router}/>
+        </App>
     </StrictMode>
 );
