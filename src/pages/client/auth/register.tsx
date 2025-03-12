@@ -2,20 +2,22 @@ import {Button, Divider, Form, FormProps, Input} from "antd";
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import 'styles/register.scss';
+import {loginAPI} from "services/api.ts";
 
 interface FieldType {
-    fullName?: string;
-    email?: string;
-    password?: string;
-    phone?: number;
+    fullName: string;
+    email: string;
+    password: string;
+    phone: number;
 }
-
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-};
 
 const RegisterPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
+
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        const res = await loginAPI("admin@gmail.com", "123456");
+        console.log(">>> check res: ", res)
+    };
 
     return (
         <div className="register-page">
