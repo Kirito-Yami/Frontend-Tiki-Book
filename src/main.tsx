@@ -8,7 +8,7 @@ import RegisterPage from "pages/client/auth/register.tsx";
 import HomePage from "pages/client/home.tsx";
 import 'styles/global.scss';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {App} from "antd";
+import {App, ConfigProvider} from "antd";
 import {AppProvider} from "components/context/app.context.tsx";
 import ProtectedRoute from "components/auth";
 import LayoutAdmin from "components/layout/layout.admin.tsx";
@@ -16,23 +16,24 @@ import DashBoardPage from "pages/admin/dashboard.tsx";
 import ManageBookPage from "pages/admin/manage.book.tsx";
 import ManageOrderPage from "pages/admin/manage.order.tsx";
 import ManageUserPage from "pages/admin/manage.user.tsx";
+import enUS from 'antd/locale/en_US';
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout/>,
         children: [
             {
                 index: true,
-                element: <HomePage />
+                element: <HomePage/>
             },
             {
                 path: "book",
-                element: <BookPage />,
+                element: <BookPage/>,
             },
             {
                 path: "about",
-                element: <AboutPage />,
+                element: <AboutPage/>,
             },
             {
                 path: "checkout",
@@ -46,13 +47,13 @@ const router = createBrowserRouter([
     },
     {
         path: "admin",
-        element: <LayoutAdmin />,
+        element: <LayoutAdmin/>,
         children: [
             {
                 index: true,
                 element: (
                     <ProtectedRoute>
-                        <DashBoardPage />
+                        <DashBoardPage/>
                     </ProtectedRoute>
                 )
             },
@@ -60,7 +61,7 @@ const router = createBrowserRouter([
                 path: "book",
                 element: (
                     <ProtectedRoute>
-                        <ManageBookPage />
+                        <ManageBookPage/>
                     </ProtectedRoute>
                 )
             },
@@ -68,7 +69,7 @@ const router = createBrowserRouter([
                 path: "order",
                 element: (
                     <ProtectedRoute>
-                        <ManageOrderPage />
+                        <ManageOrderPage/>
                     </ProtectedRoute>
                 )
             },
@@ -76,7 +77,7 @@ const router = createBrowserRouter([
                 path: "user",
                 element: (
                     <ProtectedRoute>
-                        <ManageUserPage />
+                        <ManageUserPage/>
                     </ProtectedRoute>
                 ),
             }
@@ -84,11 +85,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <LoginPage />,
+        element: <LoginPage/>,
     },
     {
         path: "/register",
-        element: <RegisterPage />,
+        element: <RegisterPage/>,
     },
 
 ]);
@@ -97,7 +98,9 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <App>
             <AppProvider>
-                <RouterProvider router={router}/>
+                <ConfigProvider locale={enUS}>
+                    <RouterProvider router={router}/>
+                </ConfigProvider>
             </AppProvider>
         </App>
     </StrictMode>
