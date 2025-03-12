@@ -13,7 +13,7 @@ import {Avatar, Dropdown, Layout, Menu, MenuProps, Space} from "antd";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const { Content, Footer, Sider } = Layout;
+const {Content, Footer, Sider} = Layout;
 
 const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -77,7 +77,7 @@ const LayoutAdmin = () => {
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
     if (!isAuthenticated) {
         return (
-            <Outlet />
+            <Outlet/>
         )
     }
     const isAdminRoute = location.pathname.includes("admin");
@@ -85,7 +85,7 @@ const LayoutAdmin = () => {
         const role = user?.role;
         if (role === "USER") {
             return (
-                <Outlet />
+                <Outlet/>
             )
         }
     }

@@ -85,9 +85,11 @@ const RegisterPage = () => {
                                 label="Số điện thoại"
                                 name="phone"
                                 rules={[
-                                    {required: true, message: 'Số điện thoại không được để trống!'},
-                                    {pattern: new RegExp(/^[0-9]+$/), message: 'Số điện thoại chỉ được chứa số!'},
-                                    {min: 10, message: 'Số điện thoại không hợp !'}
+                                    { required: true, message: 'Số điện thoại không được để trống!' },
+                                    {
+                                        pattern: /^[0-9]{10,}$/,
+                                        message: 'Số điện thoại chỉ được chứa số và phải có ít nhất 10 ký tự!'
+                                    },
                                 ]}
                             >
                                 <Input style={{borderRadius: "999px", height: "40px"}}

@@ -83,12 +83,13 @@ const AppHeader = () => {
                     <div className="page-header__top">
                         <div className="page-header__toggle" onClick={() => {
                             setOpenDrawer(true)
-                        }}>☰</div>
+                        }}>☰
+                        </div>
                         <div className='page-header__logo'>
                              <span className='logo'>
-                                 <span onClick={() => navigate('/')}> <FaReact className='rotate icon-react' />Tik! Shop</span>
+                                 <span onClick={() => navigate('/')}> <FaReact className='rotate icon-react'/>Tik! Shop</span>
 
-                                 <VscSearchFuzzy className='icon-search' />
+                                 <VscSearchFuzzy className='icon-search'/>
                              </span>
                             <input
                                 className="input-search" type={'text'}
@@ -115,18 +116,18 @@ const AppHeader = () => {
                                         size={"small"}
                                         showZero
                                     >
-                                        <FiShoppingCart className='icon-cart' />
+                                        <FiShoppingCart className='icon-cart'/>
                                     </Badge>
                                 </Popover>
                             </li>
-                            <li className="navigation__item mobile"><Divider type='vertical' /></li>
+                            <li className="navigation__item mobile"><Divider type='vertical'/></li>
                             <li className="navigation__item mobile">
                                 {!isAuthenticated ?
                                     <span onClick={() => navigate('/login')}> Tài Khoản</span>
                                     :
-                                    <Dropdown menu={{ items }} trigger={['click']}>
-                                        <Space >
-                                            <Avatar src={urlAvatar} />
+                                    <Dropdown menu={{items}} trigger={['click']}>
+                                        <Space>
+                                            <Avatar src={urlAvatar}/>
                                             {user?.fullName}
                                         </Space>
                                     </Dropdown>
@@ -143,10 +144,10 @@ const AppHeader = () => {
                 open={openDrawer}
             >
                 <p>Quản lý tài khoản</p>
-                <Divider />
+                <Divider/>
 
                 <p onClick={() => handleLogout()}>Đăng xuất</p>
-                <Divider />
+                <Divider/>
             </Drawer>
         </>
     )
