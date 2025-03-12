@@ -5,94 +5,7 @@ import {Button} from 'antd';
 import {useRef, useState} from 'react'
 import {getUsersAPI} from "services/api.ts";
 import {dateRangeValidate} from "services/helper.ts";
-
-const columns: ProColumns<IUserTable>[] = [
-    {
-        dataIndex: 'index',
-        valueType: 'indexBorder',
-        width: 48,
-    },
-    {
-        title: 'ID',
-        dataIndex: '_id',
-        ellipsis: true,
-        hideInSearch: true,
-        render(_, entity) {
-            return (
-                <a href='#'>{entity._id}</a>
-            )
-        },
-    },
-    {
-        title: 'Full Name',
-        dataIndex: 'fullName',
-        copyable: true,
-        ellipsis: true,
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-        copyable: true,
-        ellipsis: true,
-    },
-    {
-        title: 'Phone',
-        dataIndex: 'phone',
-        // copyable: true,
-        ellipsis: true,
-    },
-    {
-        title: 'Role',
-        dataIndex: 'role',
-        // copyable: true,
-        ellipsis: true,
-        hideInSearch: true,
-    },
-    {
-        title: 'Created At',
-        dataIndex: 'createdAt',
-        valueType: 'date',
-        sorter: true,
-        hideInSearch: true
-    },
-    {
-        title: 'Created At',
-        dataIndex: 'createdAtRange',
-        valueType: 'dateRange',
-        hideInTable: true,
-    },
-    {
-        title: 'Updated At',
-        dataIndex: 'updatedAt',
-        valueType: 'date',
-        sorter: true,
-        hideInSearch: true
-    },
-    {
-        title: 'Updated At',
-        dataIndex: 'updatedAtRange',
-        valueType: 'dateRange',
-        hideInTable: true
-    },
-    {
-        title: 'Action',
-        hideInSearch: true,
-        render() {
-            return (
-                <>
-                    <EditTwoTone
-                        twoToneColor="#f57800"
-                        style={{cursor: "pointer", marginRight: 15}}
-                    />
-                    <DeleteTwoTone
-                        twoToneColor="#ff4d4f"
-                        style={{cursor: "pointer"}}
-                    />
-                </>
-            )
-        }
-    }
-];
+import UserDetail from "components/admin/user/detail.user.tsx";
 
 interface ISearch {
     fullName: string;
@@ -106,12 +19,110 @@ interface ISearch {
 
 const TableUser = () => {
     const actionRef = useRef<ActionType>();
+
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [dataUser, setDataUser] = useState<IUserTable | null>(null);
+
     const [meta, setMeta] = useState({
         current: 1,
         pageSize: 5,
         pages: 0,
         total: 0
     });
+
+    const columns: ProColumns<IUserTable>[] = [
+        {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
+            title: 'ID',
+            dataIndex: '_id',
+            ellipsis: true,
+            hideInSearch: true,
+            render(_, entity) {
+                return (
+                    <a
+                        onClick={() => {
+                            setOpenDrawer(true);
+                            setDataUser(entity);
+                        }}
+                        href='#'
+                    >{entity._id}</a>
+                )
+            },
+        },
+        {
+            title: 'Full Name',
+            dataIndex: 'fullName',
+            copyable: true,
+            ellipsis: true,
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            copyable: true,
+            ellipsis: true,
+        },
+        {
+            title: 'Phone',
+            dataIndex: 'phone',
+            // copyable: true,
+            ellipsis: true,
+        },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            // copyable: true,
+            ellipsis: true,
+            hideInSearch: true,
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            valueType: 'date',
+            sorter: true,
+            hideInSearch: true
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAtRange',
+            valueType: 'dateRange',
+            hideInTable: true,
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updatedAt',
+            valueType: 'date',
+            sorter: true,
+            hideInSearch: true
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updatedAtRange',
+            valueType: 'dateRange',
+            hideInTable: true
+        },
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render() {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{cursor: "pointer", marginRight: 15}}
+                        />
+                        <DeleteTwoTone
+                            twoToneColor="#ff4d4f"
+                            style={{cursor: "pointer"}}
+                        />
+                    </>
+                )
+            }
+        }
+    ];
     return (
         <>
             <ProTable<IUserTable, ISearch>
@@ -193,6 +204,12 @@ const TableUser = () => {
                         Add new
                     </Button>
                 ]}
+            />
+            <UserDetail
+                openDrawer={openDrawer}
+                setOpenDrawer={setOpenDrawer}
+                dataUser={dataUser}
+                setDataUser={setDataUser}
             />
         </>
     );
