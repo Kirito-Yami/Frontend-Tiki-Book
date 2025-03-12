@@ -1,4 +1,4 @@
-import {Badge, Descriptions, Drawer} from "antd";
+import {Avatar, Badge, Descriptions, Drawer} from "antd";
 import dayjs from "dayjs";
 import {FORMATE_DATE_VN} from "services/helper.ts";
 
@@ -17,6 +17,8 @@ const UserDetail = (props: IProps) => {
         setDataUser(null);
     };
 
+    const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${dataUser?.avatar}`
+
     return (
         <Drawer
             title="Chức năng xem chi tiết"
@@ -33,8 +35,11 @@ const UserDetail = (props: IProps) => {
                 <Descriptions.Item label="Tên Hiển Thị">{dataUser?.fullName}</Descriptions.Item>
                 <Descriptions.Item label="Email">{dataUser?.email}</Descriptions.Item>
                 <Descriptions.Item label="Số Điện Thoại">{dataUser?.phone}</Descriptions.Item>
-                <Descriptions.Item label="Role" span={2}>
+                <Descriptions.Item label="Role">
                     <Badge status="processing" text={dataUser?.role} />
+                </Descriptions.Item>
+                <Descriptions.Item label="Avatar">
+                    <Avatar size={40} src={avatarURL}/>
                 </Descriptions.Item>
                 <Descriptions.Item label="Ngày Đăng Ký">
                     {dayjs(dataUser?.createdAt).format(FORMATE_DATE_VN)}
