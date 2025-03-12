@@ -1,4 +1,4 @@
-import {DeleteTwoTone, EditTwoTone, PlusOutlined} from '@ant-design/icons';
+import {CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
 import {Button} from 'antd';
@@ -7,6 +7,7 @@ import {getUsersAPI} from "services/api.ts";
 import {dateRangeValidate} from "services/helper.ts";
 import UserDetail from "components/admin/user/detail.user.tsx";
 import CreateUser from "components/admin/user/create.user.tsx";
+import ImportUser from "components/admin/user/data/import.user.tsx";
 
 interface ISearch {
     fullName: string;
@@ -25,6 +26,8 @@ const TableUser = () => {
     const [dataUser, setDataUser] = useState<IUserTable | null>(null);
 
     const [openModalCreate, setOpenModalCreate] = useState(false);
+
+    const [openModalImport, setOpenModalImport] = useState(false);
 
     const [meta, setMeta] = useState({
         current: 1,
@@ -204,6 +207,23 @@ const TableUser = () => {
                 toolBarRender={() => [
                     <Button
                         key="button"
+                        icon={<ExportOutlined />}
+                        type="primary"
+                    >
+                        Export
+                    </Button>,
+                    <Button
+                        key="button"
+                        icon={<CloudUploadOutlined />}
+                        onClick={() => {
+                            setOpenModalImport(true);
+                        }}
+                        type="primary"
+                    >
+                        Import
+                    </Button>,
+                    <Button
+                        key="button"
                         icon={<PlusOutlined/>}
                         onClick={() => {
                             setOpenModalCreate(true);
@@ -213,6 +233,10 @@ const TableUser = () => {
                         Add new
                     </Button>
                 ]}
+            />
+            <ImportUser
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
             />
             <CreateUser
                 openModalCreate={openModalCreate}
