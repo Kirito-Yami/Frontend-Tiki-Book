@@ -11,50 +11,86 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {App} from "antd";
 import {AppProvider} from "components/context/app.context.tsx";
 import ProtectedRoute from "components/auth";
+import LayoutAdmin from "components/layout/layout.admin.tsx";
+import DashBoardPage from "pages/admin/dashboard.tsx";
+import ManageBookPage from "pages/admin/manage.book.tsx";
+import ManageOrderPage from "pages/admin/manage.order.tsx";
+import ManageUserPage from "pages/admin/manage.user.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout/>,
+        element: <Layout />,
         children: [
             {
                 index: true,
-                element: <HomePage/>,
+                element: <HomePage />
             },
             {
                 path: "book",
-                element: <BookPage/>,
+                element: <BookPage />,
             },
             {
                 path: "about",
-                element: <AboutPage/>,
+                element: <AboutPage />,
             },
             {
-                path: "/checkout",
+                path: "checkout",
                 element: (
                     <ProtectedRoute>
                         <div>checkout page</div>
                     </ProtectedRoute>
                 ),
-            },
+            }
+        ]
+    },
+    {
+        path: "admin",
+        element: <LayoutAdmin />,
+        children: [
             {
-                path: "/admin",
+                index: true,
                 element: (
                     <ProtectedRoute>
-                        <div>admin page</div>
+                        <DashBoardPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "book",
+                element: (
+                    <ProtectedRoute>
+                        <ManageBookPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "order",
+                element: (
+                    <ProtectedRoute>
+                        <ManageOrderPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "user",
+                element: (
+                    <ProtectedRoute>
+                        <ManageUserPage />
                     </ProtectedRoute>
                 ),
-            },
-        ],
+            }
+        ]
     },
     {
         path: "/login",
-        element: <LoginPage/>,
+        element: <LoginPage />,
     },
     {
         path: "/register",
-        element: <RegisterPage/>,
+        element: <RegisterPage />,
     },
+
 ]);
 
 createRoot(document.getElementById("root")!).render(

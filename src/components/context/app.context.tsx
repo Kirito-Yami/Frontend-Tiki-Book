@@ -1,10 +1,12 @@
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
+import {fetchAccountAPI} from "services/api.ts";
+import {PacmanLoader} from "react-spinners";
 
 interface IAppContext {
     isAuthenticated: boolean;
     setIsAuthenticated: (value: boolean) => void;
     user: IUser | null;
-    setUser: (value: IUser) => void;
+    setUser: (value: IUser | null) => void;
     isAppLoading: boolean;
     setIsAppLoading: (v: boolean) => void;
 }
@@ -21,12 +23,42 @@ const AppProvider = (props: IProps) => {
     const [user, setUser] = useState<IUser | null>(null);
     const {children} = props;
 
+    useEffect(() => {
+        const fetchAccount = async () => {
+            const res = await fetchAccountAPI();
+            if (res.data) {
+                setUser(res.data.user);
+                setIsAuthenticated(true);
+            }
+            setIsAppLoading(false)
+        }
+        fetchAccount();
+    }, [])
+
     return (
-        <CurrentAppContext.Provider value={{
-            isAuthenticated, setIsAuthenticated, user, setUser, isAppLoading, setIsAppLoading
-        }}>
-            {children}
-        </CurrentAppContext.Provider>
+        <>
+            {!isAppLoading ?
+                <CurrentAppContext.Provider value={{
+                    isAuthenticated, user, setIsAuthenticated, setUser,
+                    isAppLoading, setIsAppLoading
+                }}>
+                    {children}
+                </CurrentAppContext.Provider>
+                :
+                <div style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)"
+                }}>
+                    <PacmanLoader
+                        size={30}
+                        color="#36d6b4"
+                    />
+                </div>
+            }
+
+        </>
     );
 };
 
