@@ -58,7 +58,7 @@ const columns: ProColumns<IUserTable>[] = [
         dataIndex: 'updatedAt',
         copyable: true,
         ellipsis: true,
-    },{
+    }, {
         title: 'Action',
         hideInSearch: true,
         render() {
@@ -66,11 +66,11 @@ const columns: ProColumns<IUserTable>[] = [
                 <>
                     <EditTwoTone
                         twoToneColor="#f57800"
-                        style={{ cursor: "pointer", marginRight: 15 }}
+                        style={{cursor: "pointer", marginRight: 15}}
                     />
                     <DeleteTwoTone
                         twoToneColor="#ff4d4f"
-                        style={{ cursor: "pointer" }}
+                        style={{cursor: "pointer"}}
                     />
                 </>
             )
@@ -93,9 +93,9 @@ const TableUser = () => {
                 columns={columns}
                 actionRef={actionRef}
                 cardBordered
-                request={async (sort, filter) => {
-                    console.log(sort, filter);
-                    const res = await getUsersAPI();
+                request={async (params, sort, filter) => {
+                    console.log(params, sort, filter);
+                    const res = await getUsersAPI(params?.current ?? 1, params?.pageSize ?? 5);
                     if (res.data) {
                         setMeta(res.data.meta);
                     }
@@ -106,7 +106,7 @@ const TableUser = () => {
                         total: res.data?.meta.total
                     }
                 }}
-                rowKey="id"
+                rowKey="_id"
                 options={{
                     setting: {
                         listsHeight: 400,
@@ -117,8 +117,11 @@ const TableUser = () => {
                         current: meta.current,
                         pageSize: meta.pageSize,
                         showSizeChanger: true,
+                        pageSizeOptions: ['5', '10', '15', '20', '25', '30'],
                         total: meta.total,
-                        showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
+                        showTotal: (total, range) => {
+                            return (<div> {range[0]}-{range[1]} trên {total} rows</div>)
+                        }
                     }
                 }
                 dateFormatter="string"
@@ -129,7 +132,7 @@ const TableUser = () => {
                 toolBarRender={() => [
                     <Button
                         key="button"
-                        icon={<PlusOutlined />}
+                        icon={<PlusOutlined/>}
                         onClick={() => {
                             actionRef.current?.reload();
                         }}

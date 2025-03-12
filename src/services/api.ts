@@ -18,7 +18,7 @@ const registerAPI = (fullName: string, email: string, password: string, phone: n
 
 const fetchAccountAPI = () => {
     const urlBackend = "/api/v1/auth/account";
-    return axios.get<IBackendRes<IFetchAccount>>(urlBackend,{
+    return axios.get<IBackendRes<IFetchAccount>>(urlBackend, {
         headers: {
             delay: 2000
         }
@@ -30,8 +30,8 @@ const logoutAPI = () => {
     return axios.post<IBackendRes<ILogin>>(urlBackend)
 }
 
-const getUsersAPI = ()=>{
-    const urlBackend = "/api/v1/user?current=1&pageSize=5";
+const getUsersAPI = (current: number, pageSize: number) => {
+    const urlBackend = `/api/v1/user?current=${current}&pageSize=${pageSize}`;
     return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend);
 }
 
