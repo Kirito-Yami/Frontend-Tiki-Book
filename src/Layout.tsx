@@ -1,8 +1,12 @@
+import AppHeader from "components/layout/header.tsx";
+import {Outlet} from "react-router-dom";
+
 const Layout = () => {
     return (
-        <>
-            ahihi
-        </>
+        <div>
+            <AppHeader />
+            <Outlet />
+        </div>
     )
 }
 
