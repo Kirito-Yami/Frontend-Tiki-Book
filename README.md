@@ -1,54 +1,36 @@
-# React + TypeScript + Vite
+## Book Store
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### I. Thông tin về dự án
+1. Về dự án:
+    - Dự án lấy ý tưởng từ TikiShop. Mục tiêu dự án là tạo ra nền tảng tìm kiếm và đặt sách.
+    - Công nghệ sử dụng: React(TypeScript), Antd
 
-Currently, two official plugins are available:
+2. Môi trường NodeJS
+    - Môi trường chạy dự án là NodeJS version 20.14.0
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. Demo:
+    - Link Demo sản phẩm tại đây: https://tiki-book-final.vercel.app/
 
-## Expanding the ESLint configuration
+4. Cách chạy dự án:
+    - Các bước cài đặt:
+        + Clone source code.
+        + Cài đặt thư viện: npm i
+        + Update file .env.development (nếu cần thiết)
+        + Chạy dự án: npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+====================================================================
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### II. Người thực hiện
+👋👋 Chào bạn, tôi là Kirito Nguyễn!
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+👀 Tôi đam mê lập trình, đặc biệt là trong lĩnh vực phát triển website và ứng dụng di động.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+🌱 Hiện tại, tôi đang theo học ngành Công nghệ Thông tin và tập trung vào việc phát triển website và ứng dụng di động.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+💞️ Tôi luôn mong muốn tìm kiếm cơ hội hợp tác trong các dự án sáng tạo liên quan đến website và ứng dụng di động.
+
+📫 Bạn có thể tìm kiếm thông tin của tôi trên website: https://minhducnguyen.io.vn
+
+😄 Ngoài lập trình, tôi cũng rất thích ca hát và chơi nhạc cụ – đó là cách tôi thư giãn và sáng tạo!
+
+⚡ Sở thích của tôi là viết mã ngắn gọn, dễ hiểu và hiệu quả – tối giản nhưng mạnh mẽ.
