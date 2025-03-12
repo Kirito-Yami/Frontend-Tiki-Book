@@ -141,6 +141,12 @@ const TableUser = () => {
                             query += `&createdAt>=${updateDateRange[0]}&createdAt<=${updateDateRange[1]}`
                         }
                     }
+                    if (sort && sort.createdAt) {
+                        query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`
+                    }
+                    if (sort && sort.updatedAt) {
+                        query += `&sort=${sort.updatedAt === 'ascend' ? 'updatedAt' : '-updatedAt'}`
+                    }
                     const res = await getUsersAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
