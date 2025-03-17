@@ -165,10 +165,14 @@ const TableUser = () => {
                     }
                     query += `&sort=-createdAt`
                     if (sort && sort.createdAt) {
-                        query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`
+                        query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`;
+                    }else{
+                        query += `&sort=-createdAt`;
                     }
                     if (sort && sort.updatedAt) {
-                        query += `&sort=${sort.updatedAt === 'ascend' ? 'updatedAt' : '-updatedAt'}`
+                        query += `&sort=${sort.updatedAt === 'ascend' ? 'updatedAt' : '-updatedAt'}`;
+                    }else{
+                        query += `&sort=-updatedAt`;
                     }
                     const res = await getUsersAPI(query);
                     if (res.data) {
