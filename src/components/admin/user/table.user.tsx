@@ -8,6 +8,7 @@ import {dateRangeValidate} from "services/helper.ts";
 import UserDetail from "components/admin/user/detail.user.tsx";
 import CreateUser from "components/admin/user/create.user.tsx";
 import ImportUser from "components/admin/user/data/import.user.tsx";
+import {CSVLink} from "react-csv";
 
 interface ISearch {
     fullName: string;
@@ -22,12 +23,15 @@ interface ISearch {
 const TableUser = () => {
     const actionRef = useRef<ActionType>();
 
-    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+
     const [dataUser, setDataUser] = useState<IUserTable | null>(null);
 
-    const [openModalCreate, setOpenModalCreate] = useState(false);
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
-    const [openModalImport, setOpenModalImport] = useState(false);
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+
+    const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
 
     const [meta, setMeta] = useState({
         current: 1,
@@ -166,17 +170,18 @@ const TableUser = () => {
                     query += `&sort=-createdAt`
                     if (sort && sort.createdAt) {
                         query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`;
-                    }else{
+                    } else {
                         query += `&sort=-createdAt`;
                     }
                     if (sort && sort.updatedAt) {
                         query += `&sort=${sort.updatedAt === 'ascend' ? 'updatedAt' : '-updatedAt'}`;
-                    }else{
+                    } else {
                         query += `&sort=-updatedAt`;
                     }
                     const res = await getUsersAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
+                        setCurrentDataTable(res.data?.result ?? []);
                     }
                     return {
                         data: res.data?.result,
@@ -211,14 +216,19 @@ const TableUser = () => {
                 toolBarRender={() => [
                     <Button
                         key="button"
-                        icon={<ExportOutlined />}
+                        icon={<ExportOutlined/>}
                         type="primary"
                     >
-                        Export
+                        <CSVLink
+                            data={currentDataTable}
+                            filename={"data-user.csv"}
+                        >
+                            Export
+                        </CSVLink>
                     </Button>,
                     <Button
                         key="button"
-                        icon={<CloudUploadOutlined />}
+                        icon={<CloudUploadOutlined/>}
                         onClick={() => {
                             setOpenModalImport(true);
                         }}
