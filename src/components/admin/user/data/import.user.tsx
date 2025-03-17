@@ -3,10 +3,12 @@ import {InboxOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import Exceljs from "exceljs";
 import {Buffer} from "buffer";
+import {bulkCreateUserAPI} from "services/api.ts";
 
 interface IProps {
     openModalImport: boolean;
     setOpenModalImport: (value: boolean) => void;
+    refreshTable: () => void;
 }
 
 interface IDataImport {
@@ -22,9 +24,10 @@ interface SheetRowValues {
 const {Dragger} = Upload;
 
 const ImportUser = (props: IProps) => {
-    const {openModalImport, setOpenModalImport} = props;
+    const {openModalImport, setOpenModalImport, refreshTable} = props;
     const [dataImport, setDataImport] = useState<IDataImport[]>([]);
-    const {message} = App.useApp();
+    const [isSubmit, setIsSubmit] = useState<boolean>(false);
+    const {message, notification} = App.useApp();
 
     const propsUpload: UploadProps = {
         name: 'file',
@@ -53,7 +56,7 @@ const ImportUser = (props: IProps) => {
                     await workbook.xlsx.load(buffer);
 
                     //convert file
-                    const jsonData: IDataImport[] = [];
+                    let jsonData: IDataImport[] = [];
                     workbook.worksheets.forEach(function (sheet) {
                         // read first row as data keys
                         const firstRow = sheet.getRow(1);
@@ -74,6 +77,9 @@ const ImportUser = (props: IProps) => {
                             jsonData.push(dataImportObj);
                         })
                     });
+                    jsonData = jsonData.map((item, index)=>{
+                        return {...item, id: index + 1}
+                    })
                     setDataImport(jsonData);
                 }
             } else if (status === 'error') {
@@ -90,12 +96,36 @@ const ImportUser = (props: IProps) => {
         setDataImport([]);
     }
 
+    const handleImport = async () => {
+        setIsSubmit(true);
+        const dataSubmit = dataImport.map(item => ({
+            fullName: item.fullName,
+            email: item.email,
+            phone: item.phone,
+            password: import.meta.env.VITE_CREATE_USER_PASSWORD,
+        }))
+        const res = await bulkCreateUserAPI(dataSubmit);
+        if(res.data){
+            notification.success({
+                message: "Import Success!",
+                description: `Thành công: ${res.data.countSuccess}. Thất bại: ${res.data.countError}`
+            })
+        }
+        setIsSubmit(false);
+        setOpenModalImport(false);
+        setDataImport([]);
+        refreshTable();
+    }
+
     return (
         <Modal
             title="Import data user"
             open={openModalImport}
-            onOk={() => setOpenModalImport(false)}
-            okButtonProps={{disabled: dataImport.length <= 0}}
+            onOk={() => handleImport()}
+            okButtonProps={{
+                disabled: dataImport.length <= 0,
+                loading: isSubmit,
+            }}
             okText={"Import"}
             onCancel={onClose}
             width={"50vw"}
@@ -112,6 +142,8 @@ const ImportUser = (props: IProps) => {
             </Dragger>
             <div style={{marginTop: "20px"}}>
                 <Table
+                    rowKey="id"
+                    pagination={false}
                     title={() => <span>Dữ liệu upload:</span>}
                     dataSource={dataImport}
                     columns={[
