@@ -275,7 +275,11 @@ const TableBook = () => {
 
                 ]}
             />
-            <CreateBook/>
+            <CreateBook
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
             <BookDetail
                 openDrawer={openDrawer}
                 setOpenDrawer={setOpenDrawer}
