@@ -1,12 +1,12 @@
 import {useRef, useState} from "react";
 import {ActionType, ProColumns, ProTable} from "@ant-design/pro-components";
 import {DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined} from "@ant-design/icons";
-import {Button, Popconfirm} from "antd";
+import {App, Button, Popconfirm} from "antd";
 import {dateRangeValidate} from "services/helper.ts";
 import {CSVLink} from "react-csv";
 import CreateBook from "components/admin/book/create.book.tsx";
 import BookDetail from "components/admin/book/detail.book.tsx";
-import {getBooksAPI} from "services/api.ts";
+import {deleteBookAPI, getBooksAPI} from "services/api.ts";
 import UpdateBook from "components/admin/book/update.book.tsx";
 
 interface ISearch {
@@ -36,6 +36,10 @@ const TableBook = () => {
 
     const [currentDataTable, setCurrentDataTable] = useState<IBookTable[]>([]);
 
+    const [deleteBook, setDeleteBook] = useState<boolean>(false);
+
+    const {message, notification} = App.useApp();
+
     const [meta, setMeta] = useState({
         current: 1,
         pageSize: 5,
@@ -47,6 +51,19 @@ const TableBook = () => {
         actionRef.current?.reload();
     }
 
+    const handleDeleteBook = async (_id: string) => {
+        setDeleteBook(true);
+        const res = await deleteBookAPI(_id);
+        if (res && res.data) {
+            message.success('Xóa book thành công');
+            refreshTable();
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
+    }
 
     const columns: ProColumns<IBookTable>[] = [
         {
@@ -155,10 +172,11 @@ const TableBook = () => {
                         <Popconfirm
                             title="Delete the task"
                             description="Are you sure to delete this task?"
+                            onConfirm={() => handleDeleteBook(entity._id)}
                             okText="Yes"
                             cancelText="No"
                             okButtonProps={{
-                                // loading: deleteBook,
+                                loading: deleteBook,
                             }}
                         >
                             <DeleteTwoTone
