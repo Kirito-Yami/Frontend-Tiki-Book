@@ -1,7 +1,8 @@
 import {Badge, Descriptions, Divider, Drawer, GetProp, Image, Upload, UploadFile, UploadProps} from "antd";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {FORMATE_DATE_VN} from "services/helper.ts";
+import {v4 as uuidv4} from 'uuid';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -12,38 +13,49 @@ interface IProps {
     setDataBook: (value: IBookTable | null) => void;
 }
 
+interface ThumbnailFile extends UploadFile {
+    uid: string;
+    name: string;
+    status: 'done';
+    url: string;
+}
+
 const BookDetail = (props: IProps) => {
     const {openDrawer, setOpenDrawer, dataBook, setDataBook} = props;
-    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-    const [previewImage, setPreviewImage] = useState<string>('');
-    // const [previewTitle, setPreviewTitle] = useState('');
 
-    const [fileList, setFileList] = useState<UploadFile[]>([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-2',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-3',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-4',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+
+    const [previewImage, setPreviewImage] = useState<string>('');
+
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    useEffect(() => {
+        if (dataBook) {
+            const imgThumbnail: ThumbnailFile | undefined = dataBook.thumbnail
+                ? {
+                    uid: uuidv4(),
+                    name: dataBook.thumbnail,
+                    status: 'done',
+                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataBook.thumbnail}`,
+                }
+                : undefined;
+
+            const imgSlider: ThumbnailFile[] = dataBook.slider?.map((item): ThumbnailFile => ({
+                uid: uuidv4(),
+                name: item,
+                status: 'done',
+                url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+            })) || [];
+
+            // Kết hợp imgThumbnail (nếu tồn tại) và imgSlider
+            const combinedFiles: ThumbnailFile[] = [
+                ...(imgThumbnail ? [imgThumbnail] : []),
+                ...imgSlider,
+            ];
+
+            setFileList(combinedFiles as UploadFile[]);
         }
-    ]);
+    }, [dataBook]);
 
     const handlePreview = async (file: UploadFile) => {
         if (!file.url && !file.preview) {
