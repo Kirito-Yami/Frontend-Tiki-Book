@@ -1,9 +1,9 @@
 import {CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
-import {Button} from 'antd';
+import {App, Button, Popconfirm} from 'antd';
 import {useRef, useState} from 'react'
-import {getUsersAPI} from "services/api.ts";
+import {deleteUserAPI, getUsersAPI} from "services/api.ts";
 import {dateRangeValidate} from "services/helper.ts";
 import UserDetail from "components/admin/user/detail.user.tsx";
 import CreateUser from "components/admin/user/create.user.tsx";
@@ -38,12 +38,31 @@ const TableUser = () => {
 
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
 
+    const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
+
+    const {message, notification} = App.useApp();
+
     const [meta, setMeta] = useState({
         current: 1,
         pageSize: 5,
         pages: 0,
         total: 0
     });
+
+    const handleDeleteUser = async (_id: string) => {
+        setIsDeleteUser(true)
+        const res = await deleteUserAPI(_id);
+        if (res && res.data) {
+            message.success('Xóa user thành công');
+            refreshTable();
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
+        setIsDeleteUser(false)
+    }
 
     const columns: ProColumns<IUserTable>[] = [
         {
@@ -133,10 +152,21 @@ const TableUser = () => {
                             twoToneColor="#f57800"
                             style={{cursor: "pointer", marginRight: 15}}
                         />
-                        <DeleteTwoTone
-                            twoToneColor="#ff4d4f"
-                            style={{cursor: "pointer"}}
-                        />
+                        <Popconfirm
+                            title="Delete the task"
+                            description="Are you sure to delete this task?"
+                            onConfirm={() => handleDeleteUser(entity._id)}
+                            okText="Yes"
+                            cancelText="No"
+                            okButtonProps={{
+                                loading: isDeleteUser,
+                            }}
+                        >
+                            <DeleteTwoTone
+                                twoToneColor="#ff4d4f"
+                                style={{cursor: "pointer"}}
+                            />
+                        </Popconfirm>
                     </>
                 )
             }
