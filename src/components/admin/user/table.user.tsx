@@ -234,36 +234,34 @@ const TableUser = () => {
                         listsHeight: 400,
                     },
                 }}
-                pagination={
-                    {
-                        current: meta.current,
-                        pageSize: meta.pageSize,
-                        showSizeChanger: true,
-                        pageSizeOptions: ['10', '20', '30', '40', '50'],
-                        total: meta.total,
-                        showTotal: (total, range) => {
-                            return (<div> {range[0]}-{range[1]} trên {total} rows</div>)
-                        }
+                pagination={{
+                    current: meta.current,
+                    pageSize: meta.pageSize,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['10', '20', '30', '40', '50'],
+                    total: meta.total,
+                    showTotal: (total, range) => {
+                        return (<div> {range[0]}-{range[1]} trên {total} rows</div>)
                     }
-                }
+                }}
                 dateFormatter="string"
                 headerTitle="Table User"
                 editable={{
                     type: 'multiple',
                 }}
                 toolBarRender={() => [
-                    <Button
-                        key="button"
-                        icon={<ExportOutlined/>}
-                        type="primary"
+                    <CSVLink
+                        data={currentDataTable}
+                        filename={"data-user.csv"}
                     >
-                        <CSVLink
-                            data={currentDataTable}
-                            filename={"data-user.csv"}
+                        <Button
+                            key="button"
+                            icon={<ExportOutlined/>}
+                            type="primary"
                         >
                             Export
-                        </CSVLink>
-                    </Button>,
+                        </Button>
+                    </CSVLink>,
                     <Button
                         key="button"
                         icon={<CloudUploadOutlined/>}
@@ -282,7 +280,7 @@ const TableUser = () => {
                         }}
                         type="primary"
                     >
-                        Add new
+                        Thêm mới
                     </Button>
                 ]}
             />

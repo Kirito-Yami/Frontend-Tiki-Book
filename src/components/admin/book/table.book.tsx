@@ -7,6 +7,7 @@ import {CSVLink} from "react-csv";
 import CreateBook from "components/admin/book/create.book.tsx";
 import BookDetail from "components/admin/book/detail.book.tsx";
 import {getBooksAPI} from "services/api.ts";
+import UpdateBook from "components/admin/book/update.book.tsx";
 
 interface ISearch {
     mainText: string;
@@ -27,7 +28,11 @@ const TableBook = () => {
 
     const [dataBook, setDataBook] = useState<IBookTable | null>(null);
 
+    const [dataUpdateBook, setDataUpdateBook] = useState<IBookTable | null>(null);
+
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
 
     const [currentDataTable, setCurrentDataTable] = useState<IBookTable[]>([]);
 
@@ -41,6 +46,7 @@ const TableBook = () => {
     const refreshTable = () => {
         actionRef.current?.reload();
     }
+
 
     const columns: ProColumns<IBookTable>[] = [
         {
@@ -135,13 +141,13 @@ const TableBook = () => {
         {
             title: 'Action',
             hideInSearch: true,
-            render() {
+            render(_, entity) {
                 return (
                     <>
                         <EditTwoTone
                             onClick={() => {
-                                // setOpenModalUpdate(true)
-                                // setDataUpdateUser(entity);
+                                setOpenModalUpdate(true)
+                                setDataUpdateBook(entity);
                             }}
                             twoToneColor="#f57800"
                             style={{cursor: "pointer", marginRight: 15}}
@@ -149,11 +155,10 @@ const TableBook = () => {
                         <Popconfirm
                             title="Delete the task"
                             description="Are you sure to delete this task?"
-                            // onConfirm={() => handleDeleteUser(entity._id)}
                             okText="Yes"
                             cancelText="No"
                             okButtonProps={{
-                                // loading: isDeleteUser,
+                                // loading: deleteBook,
                             }}
                         >
                             <DeleteTwoTone
@@ -249,19 +254,22 @@ const TableBook = () => {
                 }}
                 dateFormatter="string"
                 headerTitle="Table book"
+                editable={{
+                    type: 'multiple',
+                }}
                 toolBarRender={() => [
-                    <Button
-                        key="button"
-                        icon={<ExportOutlined/>}
-                        type="primary"
+                    <CSVLink
+                        data={currentDataTable}
+                        filename={"data-book.csv"}
                     >
-                        <CSVLink
-                            data={currentDataTable}
-                            filename={"data-user.csv"}
+                        <Button
+                            key="button"
+                            icon={<ExportOutlined/>}
+                            type="primary"
                         >
                             Export
-                        </CSVLink>
-                    </Button>,
+                        </Button>
+                    </CSVLink>,
                     <Button
                         key="button"
                         icon={<PlusOutlined/>}
@@ -270,7 +278,7 @@ const TableBook = () => {
                         }}
                         type="primary"
                     >
-                        Add new
+                        Thêm mới
                     </Button>
 
                 ]}
@@ -278,6 +286,13 @@ const TableBook = () => {
             <CreateBook
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+            <UpdateBook
+                dataUpdateBook={dataUpdateBook}
+                setDataUpdateBook={setDataUpdateBook}
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
                 refreshTable={refreshTable}
             />
             <BookDetail

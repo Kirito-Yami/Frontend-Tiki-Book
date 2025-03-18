@@ -51,7 +51,7 @@ const CreateUser = (props: IProps) => {
             open={openModalCreate}
             onOk={() => form.submit()}
             onCancel={onClose}
-            okText={"Thêm mới"}
+            okText={"Tạo mới"}
             cancelText={"Hủy"}
             confirmLoading={isSubmit}
         >

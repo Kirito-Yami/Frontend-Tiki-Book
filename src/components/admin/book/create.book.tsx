@@ -209,7 +209,7 @@ const CreateBook = (props: IProps) => {
     return (
         <>
             <Modal
-                title="Thêm mới book"
+                title="Thêm mới sách"
                 open={openModalCreate}
                 onOk={() => form.submit()
                 }

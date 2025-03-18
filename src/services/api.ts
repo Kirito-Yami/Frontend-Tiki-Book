@@ -65,7 +65,7 @@ const bulkCreateUserAPI = (
 
 const getBooksAPI = (query: string) => {
     const urlBackend = `/api/v1/book?${query}`;
-    return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend)
+    return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend);
 }
 
 const getCategoryAPI = () => {
@@ -81,6 +81,16 @@ const createBookAPI = (
     const data = {mainText, author, price, quantity, category, thumbnail, slider}
     const urlBackend = "/api/v1/book";
     return axios.post<IBackendRes<IBookTable>>(urlBackend, data);
+}
+
+const updateBookAPI = (
+    _id: string, mainText: string, author: string,
+    price: number, quantity: number,
+    category: string, thumbnail: string, slider: string[]
+) => {
+    const data = {mainText, author, price, quantity, category, thumbnail, slider}
+    const urlBackend = `/api/v1/book/${_id}`;
+    return axios.put<IBackendRes<IBookTable>>(urlBackend, data);
 }
 
 const uploadFileAPI = (fileImg: any, folder: string) => {
@@ -102,5 +112,5 @@ const uploadFileAPI = (fileImg: any, folder: string) => {
 export {
     loginAPI, registerAPI, fetchAccountAPI, logoutAPI, getUsersAPI, createUserAPI,
     updateUserAPI, deleteUserAPI, bulkCreateUserAPI,
-    getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI
+    getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI, updateBookAPI
 }
