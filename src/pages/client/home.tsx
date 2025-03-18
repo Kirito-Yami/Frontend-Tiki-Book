@@ -22,6 +22,11 @@ interface FieldType {
     password: string;
     email: string;
     phone: number;
+    range: {
+        from: number;
+        to: number;
+    }
+    category: string[];
 }
 
 const HomePage = () => {
@@ -34,7 +39,7 @@ const HomePage = () => {
 
     const [current, setCurrent] = useState<number>(1);
 
-    const [pageSize, setPageSize] = useState<number>(5);
+    const [pageSize, setPageSize] = useState<number>(10);
 
     const [total, setTotal] = useState<number>(0);
 
@@ -93,36 +98,47 @@ const HomePage = () => {
         }
     }
 
-    const handleChangeFilter = (changedValues: any, values: any) => {
-        console.log("Check: ", changedValues, values);
+    const handleChangeFilter = (changedValues: Partial<FieldType>, values: FieldType) => {
+        if (changedValues.category) {
+            const cate = values.category;
+            if (cate && cate.length > 0) {
+                const f = cate.join(',');
+                setFilter(`category=${f}`);
+            } else {
+                setFilter('');
+            }
+        }
     }
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-
-    }
-
-    const onChange = (key: string) => {
-        console.log(key);
+        if (values?.range?.from >= 0 && values?.range.to >= 0) {
+            let f = `price>=${values?.range.from}&price<=${values?.range.to}`;
+            if (values?.category?.length) {
+                const cate = values?.category?.join(',');
+                f += `&category=${cate}`;
+            }
+            setFilter(f);
+        }
     }
 
     const items: TabsProps['items'] = [
         {
-            key: '1',
+            key: 'sort=-sold',
             label: "Phổ biến",
             children: <></>
         },
         {
-            key: '2',
+            key: 'sort=-updatedAt',
             label: "Sách mới",
             children: <></>
         },
         {
-            key: '3',
+            key: 'sort=price',
             label: "Thấp -> Cao",
             children: <></>
         },
         {
-            key: '4',
+            key: 'sort=-price',
             label: "Cao -> Thấp",
             children: <></>
         },
@@ -139,7 +155,10 @@ const HomePage = () => {
                                     <FilterTwoTone/>
                                     <span style={{fontWeight: 500, paddingLeft: "10px"}}>Bộ Lọc Tìm Kiếm</span>
                                 </span>
-                                <ReloadOutlined title="Reset" onClick={() => form.resetFields()}/>
+                                <ReloadOutlined title="Reset" onClick={() => {
+                                    form.resetFields()
+                                    setFilter('');
+                                }}/>
                             </div>
                             <Divider/>
                             <Form
@@ -248,7 +267,7 @@ const HomePage = () => {
                                         onChange={(values) => {
                                             setSortQuery(values)
                                         }}
-                                        style={{overflow: "auto"}}
+                                        style={{overflowX: "auto"}}
                                     />
                                 </Row>
                                 <Row className="customize-row">
