@@ -1,35 +1,49 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {App, Form, FormProps, Input, Modal} from "antd";
-import {createUserAPI} from "services/api.ts";
+import {updateUserAPI} from "services/api.ts";
 
 interface IProps {
-    openModalCreate: boolean;
-    setOpenModalCreate: (value: boolean) => void;
+    openModalUpdate: boolean;
+    setOpenModalUpdate: (values: boolean) => void;
+    dataUpdateUser: IUserTable | null;
+    setDataUpdateUser: (values: IUserTable | null) => void;
     refreshTable: () => void;
 }
 
 interface FieldType {
+    _id: string;
     fullName: string;
     email: string;
-    password: string;
     phone: number;
 }
 
-const CreateUser = (props: IProps) => {
-    const {openModalCreate, setOpenModalCreate, refreshTable} = props;
+const UpdateUser = (props: IProps) => {
+    const {openModalUpdate, setOpenModalUpdate, dataUpdateUser, setDataUpdateUser, refreshTable} = props;
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const {message, notification} = App.useApp();
 
     const [form] = Form.useForm();
 
+    useEffect(() => {
+        if (dataUpdateUser) {
+            form.setFieldsValue({
+                _id: dataUpdateUser._id,
+                fullName: dataUpdateUser.fullName,
+                email: dataUpdateUser.email,
+                phone: dataUpdateUser.phone
+            })
+        }
+    }, [dataUpdateUser])
+
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
-        const {fullName, email, password, phone} = values;
-        const res = await createUserAPI(fullName, email, password, phone);
-        if (res.data) {
+        const {_id, fullName, phone} = values;
+        const res = await updateUserAPI(_id, fullName, phone);
+        if (res && res.data) {
             message.success("Đăng ký user thành công!");
-            setOpenModalCreate(false);
             form.resetFields();
+            setOpenModalUpdate(false);
+            setDataUpdateUser(null);
             refreshTable();
         } else {
             notification.error({
@@ -41,33 +55,37 @@ const CreateUser = (props: IProps) => {
     }
 
     const onClose = () => {
-        setOpenModalCreate(false);
+        setOpenModalUpdate(false);
+        setDataUpdateUser(null);
         form.resetFields();
-    };
+    }
 
     return (
         <Modal
-            title="Thêm mới người dùng"
-            open={openModalCreate}
+            title="Cập nhật người dùng"
+            open={openModalUpdate}
             onOk={() => form.submit()}
             onCancel={onClose}
-            okText={"Thêm mới"}
+            okText={"Cập nhật"}
             cancelText={"Hủy"}
             confirmLoading={isSubmit}
         >
             <Form
                 form={form}
-                name="form-create-user"
+                name="form-edit-user"
                 onFinish={onFinish}
                 autoComplete="off"
             >
                 <Form.Item<FieldType>
+                    hidden
                     labelCol={{span: 24}} //whole column
-                    label="Họ tên"
-                    name="fullName"
-                    rules={[{required: true, message: 'Họ tên không được để trống!'}]}
+                    label="ID"
+                    name="_id"
+                    rules={[
+                        {required: true, message: 'Id không được để trống!'}
+                    ]}
                 >
-                    <Input style={{borderRadius: "999px", height: "40px"}} placeholder="Nhập họ tên..."/>
+                    <Input disabled style={{borderRadius: "999px", height: "40px"}} placeholder="Nhập id..."/>
                 </Form.Item>
                 <Form.Item<FieldType>
                     labelCol={{span: 24}} //whole column
@@ -78,19 +96,15 @@ const CreateUser = (props: IProps) => {
                         {type: "email", message: "Email không đúng định dạng!"}
                     ]}
                 >
-                    <Input style={{borderRadius: "999px", height: "40px"}} placeholder="Nhập email..."/>
+                    <Input disabled style={{borderRadius: "999px", height: "40px"}} placeholder="Nhập email..."/>
                 </Form.Item>
                 <Form.Item<FieldType>
                     labelCol={{span: 24}} //whole column
-                    label="Mật khẩu"
-                    name="password"
-                    rules={[
-                        {required: true, message: 'Mật khẩu không được để trống!'},
-                        {min: 6, message: 'Mật khẩu phải chứa ít nhất 6 ký tự'}
-                    ]}
+                    label="Họ tên"
+                    name="fullName"
+                    rules={[{required: true, message: 'Họ tên không được để trống!'}]}
                 >
-                    <Input.Password style={{borderRadius: "999px", height: "40px"}}
-                                    placeholder="Nhập mật khẩu..."/>
+                    <Input style={{borderRadius: "999px", height: "40px"}} placeholder="Nhập họ tên..."/>
                 </Form.Item>
                 <Form.Item<FieldType>
                     labelCol={{span: 24}} //whole column
@@ -111,4 +125,5 @@ const CreateUser = (props: IProps) => {
         </Modal>
     )
 }
-export default CreateUser;
+
+export default UpdateUser;

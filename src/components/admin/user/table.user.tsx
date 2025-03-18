@@ -9,6 +9,7 @@ import UserDetail from "components/admin/user/detail.user.tsx";
 import CreateUser from "components/admin/user/create.user.tsx";
 import ImportUser from "components/admin/user/data/import.user.tsx";
 import {CSVLink} from "react-csv";
+import UpdateUser from "components/admin/user/update.user.tsx";
 
 interface ISearch {
     fullName: string;
@@ -27,7 +28,11 @@ const TableUser = () => {
 
     const [dataUser, setDataUser] = useState<IUserTable | null>(null);
 
+    const [dataUpdateUser, setDataUpdateUser] = useState<IUserTable | null>(null);
+
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
 
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
 
@@ -117,10 +122,14 @@ const TableUser = () => {
         {
             title: 'Action',
             hideInSearch: true,
-            render() {
+            render(_, entity) {
                 return (
                     <>
                         <EditTwoTone
+                            onClick={() => {
+                                setOpenModalUpdate(true)
+                                setDataUpdateUser(entity);
+                            }}
                             twoToneColor="#f57800"
                             style={{cursor: "pointer", marginRight: 15}}
                         />
@@ -167,7 +176,6 @@ const TableUser = () => {
                             query += `&createdAt>=${updateDateRange[0]}&createdAt<=${updateDateRange[1]}`
                         }
                     }
-                    query += `&sort=-createdAt`
                     if (sort && sort.createdAt) {
                         query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`;
                     } else {
@@ -256,6 +264,13 @@ const TableUser = () => {
             <CreateUser
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                dataUpdateUser={dataUpdateUser}
+                setDataUpdateUser={setDataUpdateUser}
                 refreshTable={refreshTable}
             />
             <UserDetail
