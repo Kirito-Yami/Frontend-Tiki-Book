@@ -44,7 +44,7 @@ const TableUser = () => {
 
     const [meta, setMeta] = useState({
         current: 1,
-        pageSize: 5,
+        pageSize: 10,
         pages: 0,
         total: 0
     });
@@ -239,7 +239,7 @@ const TableUser = () => {
                         current: meta.current,
                         pageSize: meta.pageSize,
                         showSizeChanger: true,
-                        pageSizeOptions: ['5', '10', '15', '20', '25', '30'],
+                        pageSizeOptions: ['10', '20', '30', '40', '50'],
                         total: meta.total,
                         showTotal: (total, range) => {
                             return (<div> {range[0]}-{range[1]} trên {total} rows</div>)

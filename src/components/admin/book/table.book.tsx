@@ -276,7 +276,12 @@ const TableBook = () => {
                 ]}
             />
             <CreateBook/>
-            <BookDetail/>
+            <BookDetail
+                openDrawer={openDrawer}
+                setOpenDrawer={setOpenDrawer}
+                dataBook={dataBook}
+                setDataBook={setDataBook}
+            />
         </>
     )
 }
