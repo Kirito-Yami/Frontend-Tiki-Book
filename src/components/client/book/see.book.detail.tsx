@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ImageGallery from 'react-image-gallery';
 import {Col, Divider, Rate, Row} from "antd";
 import {BsCartPlus} from "react-icons/bs";
@@ -6,69 +6,55 @@ import {MinusOutlined, PlusOutlined} from "@ant-design/icons";
 import ModalGallery from "components/client/book/modal.gallery.tsx";
 import 'styles/book.scss';
 
-const SeeBookDetail = () => {
+interface IProps {
+    currentBook: IBookTable | null;
+}
+
+const SeeBookDetail = (props: IProps) => {
+    const { currentBook } = props;
+
+    const [imageGallery, setImageGallery] = useState<{
+        original: string;
+        thumbnail: string;
+        originalClass: string;
+        thumbnailClass: string;
+    }[]>([]);
+
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const refGallery = useRef<ImageGallery>(null);
 
-    const images = [
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-    ];
+    useEffect(() => {
+        if (currentBook) {
+            //build images
+            const images = [];
+            if (currentBook.thumbnail) {
+                images.push(
+                    {
+                        original: `${import.meta.env.VITE_BACKEND_URL}/images/book/${currentBook.thumbnail}`,
+                        thumbnail: `${import.meta.env.VITE_BACKEND_URL}/images/book/${currentBook.thumbnail}`,
+                        originalClass: "original-image",
+                        thumbnailClass: "thumbnail-image"
+                    },
+                )
+            }
+            if (currentBook.slider) {
+                currentBook.slider?.map(item => {
+                    images.push(
+                        {
+                            original: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                            thumbnail: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                            originalClass: "original-image",
+                            thumbnailClass: "thumbnail-image"
+                        },
+                    )
+                })
+            }
+            setImageGallery(images)
+        }
+    }, [currentBook])
 
     const handleOnClickImage = () => {
         setIsOpenModalGallery(true);
@@ -83,7 +69,7 @@ const SeeBookDetail = () => {
                         <Col md={10} sm={0} xs={0}>
                             <ImageGallery
                                 ref={refGallery}
-                                items={images}
+                                items={imageGallery}
                                 showPlayButton={false}
                                 showFullscreenButton={false}
                                 renderLeftNav={() => <></>}
@@ -96,7 +82,7 @@ const SeeBookDetail = () => {
                             <Col md={0} sm={24} xs={24}>
                                 <ImageGallery
                                     ref={refGallery}
-                                    items={images}
+                                    items={imageGallery}
                                     showPlayButton={false}
                                     showFullscreenButton={false}
                                     renderLeftNav={() => <></>}
@@ -105,17 +91,17 @@ const SeeBookDetail = () => {
                                 />
                             </Col>
                             <Col span={24}>
-                                <div className='author'>Tác giả: <a href='#'>Jo Hemmings</a> </div>
-                                <div className='title'>How Psychology Works - Hiểu Hết Về Tâm Lý Học</div>
+                                <div className='author'>Tác giả: <a href='#'>{currentBook?.author}</a> </div>
+                                <div className='title'>{currentBook?.mainText}</div>
                                 <div className='rating'>
                                     <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 12 }} />
                                     <span className='sold'>
                                          <Divider type="vertical" />
-                                         Đã bán 6969</span>
+                                         Đã bán {currentBook?.sold ?? 0}</span>
                                 </div>
                                 <div className='price'>
                                      <span className='currency'>
-                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(696966666)}
+                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook?.price ?? 0)}
                                      </span>
                                 </div>
                                 <div className='delivery'>
@@ -148,8 +134,8 @@ const SeeBookDetail = () => {
                 isOpen={isOpenModalGallery}
                 setIsOpen={setIsOpenModalGallery}
                 currentIndex={currentIndex}
-                items={images}
-                title={"hardcode"}
+                items={imageGallery}
+                title={currentBook?.mainText ?? ""}
             />
         </div>
     )

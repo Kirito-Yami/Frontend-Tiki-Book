@@ -103,6 +103,17 @@ const deleteBookAPI = (_id: string) => {
     return axios.delete<IBackendRes<IBookTable>>(urlBackend);
 }
 
+const getBookByIdAPI = (id: string) => {
+    const urlBackend = `/api/v1/book/${id}`;
+    return axios.get<IBackendRes<IBookTable>>(urlBackend,
+        {
+            headers: {
+                delay: 3000
+            }
+        }
+    )
+}
+
 const uploadFileAPI = (fileImg: any, folder: string) => {
     const bodyFormData = new FormData();
     bodyFormData.append('fileImg', fileImg);
@@ -120,7 +131,8 @@ const uploadFileAPI = (fileImg: any, folder: string) => {
 }
 
 export {
-    loginAPI, registerAPI, fetchAccountAPI, logoutAPI, getUsersAPI, createUserAPI,
-    updateUserAPI, deleteUserAPI, bulkCreateUserAPI,
-    getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI, updateBookAPI, deleteBookAPI
+    loginAPI, registerAPI, fetchAccountAPI, logoutAPI, getUsersAPI,
+    createUserAPI, updateUserAPI, deleteUserAPI, bulkCreateUserAPI,
+    getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI, updateBookAPI,
+    deleteBookAPI, getBookByIdAPI
 }
