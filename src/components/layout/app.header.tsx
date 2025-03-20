@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {logoutAPI} from "services/api.ts";
 import {VscSearchFuzzy} from "react-icons/vsc";
-import {Avatar, Badge, Divider, Drawer, Dropdown, Popover, Space} from "antd";
+import {Avatar, Badge, Divider, Drawer, Dropdown, Empty, Popover, Space} from "antd";
 import {FiShoppingCart} from "react-icons/fi";
 import {FaReact} from "react-icons/fa";
 import 'styles/app.header.scss'
@@ -51,11 +51,11 @@ const AppHeader = () => {
     const contentPopover = () => {
         return (
             <div className='pop-cart-body'>
-                {/* <div className='pop-cart-content'>
+                 <div className='pop-cart-content'>
                      {carts?.map((book, index) => {
                          return (
                              <div className='book' key={`book-${index}`}>
-                                 <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
+                                 <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} alt={book?.detail?.thumbnail}/>
                                  <div>{book?.detail?.mainText}</div>
                                  <div className='price'>
                                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.detail?.price ?? 0)}
@@ -72,7 +72,7 @@ const AppHeader = () => {
                      <Empty
                          description="Không có sản phẩm trong giỏ hàng"
                      />
-                 } */}
+                 }
             </div>
         )
     }
