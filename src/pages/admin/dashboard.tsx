@@ -1,8 +1,8 @@
+import AdminDashboard from "components/admin/dashboard/admin.dashboard.tsx";
+
 const DashBoardPage = () => {
     return (
-        <div>
-            DashBoardPage
-        </div>
+        <AdminDashboard/>
     )
 }
 

@@ -162,9 +162,22 @@ const getHistoryAPI = () => {
     return axios.get<IBackendRes<IHistory[]>>(urlBackend);
 }
 
+const getOrdersAPI = (query: string) => {
+    const urlBackend = `/api/v1/order?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<IOrderTable>>>(urlBackend)
+}
+const getDashboardAPI = () => {
+    const urlBackend = `/api/v1/database/dashboard`;
+    return axios.get<IBackendRes<{
+        countOrder: number;
+        countUser: number;
+        countBook: number;
+    }>>(urlBackend)
+}
+
 export {
     loginAPI, registerAPI, fetchAccountAPI, logoutAPI, getUsersAPI,
     createUserAPI, updateUserAPI, updateUserInfoAPI, updateUserPasswordAPI, deleteUserAPI, bulkCreateUserAPI,
     getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI, updateBookAPI,
-    deleteBookAPI, getBookByIdAPI, createOrderAPI, getHistoryAPI
+    deleteBookAPI, getBookByIdAPI, createOrderAPI, getHistoryAPI, getOrdersAPI, getDashboardAPI
 }

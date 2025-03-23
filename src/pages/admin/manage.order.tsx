@@ -1,8 +1,8 @@
+import TableOrder from "components/admin/order/table.order.tsx";
+
 const ManageOrderPage = () => {
     return (
-        <div>
-            ManageOrderPage
-        </div>
+        <TableOrder/>
     )
 }
 
