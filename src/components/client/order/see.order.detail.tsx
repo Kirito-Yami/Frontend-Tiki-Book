@@ -1,12 +1,21 @@
-import {Col, Divider, InputNumber, Row} from "antd";
-import 'styles/order.scss';
+import {App, Col, Divider, Empty, InputNumber, Row} from "antd";
 import {useCurrentApp} from "components/context/app.context";
 import {useEffect, useState} from "react";
 import {DeleteTwoTone} from "@ant-design/icons";
+import 'styles/order.scss';
 
-const SeeOrderDetail = () => {
+interface IProps {
+    setCurrentStep: (value: number) => void;
+}
+
+const SeeOrderDetail = (props: IProps) => {
+    const {setCurrentStep} = props;
+
     const {carts, setCarts} = useCurrentApp();
+
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const {message} = App.useApp();
 
     useEffect(() => {
         if (carts && carts.length > 0) {
@@ -18,7 +27,7 @@ const SeeOrderDetail = () => {
         } else {
             setTotalPrice(0);
         }
-    },[carts]);
+    }, [carts]);
 
     const handleOnChangeInput = (value: number, book: IBookTable) => {
         if (!value || +value < 1) {
@@ -51,6 +60,14 @@ const SeeOrderDetail = () => {
             localStorage.setItem("carts", JSON.stringify(newCarts));
             setCarts(newCarts);
         }
+    }
+
+    const handleNextStep = () => {
+        if (!carts.length) {
+            message.error("Không tồn tài sản phẩm trong giỏ hàng!");
+            return;
+        }
+        setCurrentStep(1);
     }
 
     return (
@@ -98,6 +115,11 @@ const SeeOrderDetail = () => {
                                 </div>
                             )
                         })}
+                        {carts.length === 0 &&
+                            <Empty
+                                description="Không có sản phẩm trong giỏ hàng"
+                            />
+                        }
                     </Col>
                     <Col md={6} xs={24}>
                         <div className="order-sum">
@@ -121,7 +143,7 @@ const SeeOrderDetail = () => {
                                  </span>
                             </div>
                             <Divider style={{margin: "10px 0"}}/>
-                            <button>Mua hàng ({carts?.length ?? 0})</button>
+                            <button onClick={()=>handleNextStep()}>Mua hàng ({carts?.length ?? 0})</button>
                         </div>
                     </Col>
                 </Row>

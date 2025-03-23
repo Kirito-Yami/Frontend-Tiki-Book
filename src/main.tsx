@@ -6,7 +6,6 @@ import AboutPage from "pages/client/about.tsx";
 import LoginPage from "pages/client/auth/login.tsx";
 import RegisterPage from "pages/client/auth/register.tsx";
 import HomePage from "pages/client/home.tsx";
-import 'styles/global.scss';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {App, ConfigProvider} from "antd";
 import {AppProvider} from "components/context/app.context.tsx";
@@ -18,6 +17,7 @@ import ManageOrderPage from "pages/admin/manage.order.tsx";
 import ManageUserPage from "pages/admin/manage.user.tsx";
 import enUS from 'antd/locale/en_US';
 import OrderPage from "pages/client/order.tsx";
+import 'styles/global.scss';
 
 const router = createBrowserRouter([
     {
@@ -34,7 +34,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/order",
-                element: <OrderPage/>
+                element: (
+                    <ProtectedRoute>
+                        <OrderPage/>
+                    </ProtectedRoute>
+                )
             },
             {
                 path: "about",
