@@ -11,7 +11,7 @@
 📦 **Quản lý thư viện**: `npm`
 
 ### **3. Demo Dự Án**
-🌐 **Link demo dự án**: [tiki-book]()
+🌐 **Link demo dự án**: [tiki-book](https://tiki-book.vercel.app/)
 
 ### **4. Lưu Ý Quan Trọng**
 #### **4.1. Hướng dẫn thanh toán VNPay**
