@@ -2,8 +2,9 @@ import {App, Button, Col, Divider, Form, FormProps, Input, Radio, Row, Space} fr
 import {useCurrentApp} from "components/context/app.context";
 import {useEffect, useState} from "react";
 import {DeleteTwoTone} from "@ant-design/icons";
-import {createOrderAPI} from "services/api.ts";
+import {createOrderAPI, getVNPayUrlAPI} from "services/api.ts";
 import {isMobile} from 'react-device-detect';
+import {v4 as uuidv4} from 'uuid';
 import 'styles/order.scss';
 
 const {TextArea} = Input;
@@ -74,12 +75,31 @@ const Payment = (props: IProps) => {
             bookName: item.detail.mainText
         }));
         setIsSubmit(true);
-        const res = await createOrderAPI(fullName, address, phone, totalPrice, method, detail);
+        let res = null;
+        const paymentRef = uuidv4();
+        if (method === 'COD') {
+            res = await createOrderAPI(fullName, address, phone, totalPrice, method, detail);
+        } else {
+            res = await createOrderAPI(fullName, address, phone, totalPrice, method, detail, paymentRef);
+        }
         if (res?.data) {
             localStorage.removeItem("carts");
             setCarts([]);
-            message.success("Mua hàng thành công!");
-            setCurrentStep(2);
+            if (method === 'COD') {
+                message.success("Mua hàng thành công!");
+                setCurrentStep(2);
+            } else {
+                const resVNPay = await getVNPayUrlAPI(totalPrice, "vn", paymentRef);
+                if (resVNPay.data) {
+                    window.location.href = resVNPay.data.url;
+                } else {
+                    notification.error({
+                        message: "Có lỗi xảy ra",
+                        description: resVNPay.message && Array.isArray(resVNPay.message) ? resVNPay.message[0] : resVNPay.message,
+                        duration: 5,
+                    });
+                }
+            }
         } else {
             notification.error({
                 message: "Có lỗi xảy ra",

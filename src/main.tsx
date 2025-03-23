@@ -19,6 +19,7 @@ import enUS from 'antd/locale/en_US';
 import OrderPage from "pages/client/order.tsx";
 import 'styles/global.scss';
 import HistoryPage from "pages/client/history.tsx";
+import ReturnURLPage from "components/client/order/return.url.tsx";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <OrderPage/>
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/vnpay/return-url",
+                element: (
+                    <ProtectedRoute>
+                        <ReturnURLPage/>
                     </ProtectedRoute>
                 )
             },

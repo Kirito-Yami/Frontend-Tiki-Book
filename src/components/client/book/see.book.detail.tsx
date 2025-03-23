@@ -4,9 +4,9 @@ import {App, Breadcrumb, Col, Divider, Rate, Row} from "antd";
 import {BsCartPlus} from "react-icons/bs";
 import {MinusOutlined, PlusOutlined} from "@ant-design/icons";
 import ModalGallery from "components/client/book/modal.gallery.tsx";
-import 'styles/book.scss';
 import {useCurrentApp} from "components/context/app.context.tsx";
 import {Link, useNavigate} from "react-router-dom";
+import 'styles/book.scss';
 
 interface IProps {
     currentBook: IBookTable | null;

@@ -93,7 +93,7 @@ declare global {
         phone: number;
         totalPrice: number;
         type: string;
-        detail: [];
+        detail: object[];
     }
 
     interface IHistory {
@@ -101,8 +101,8 @@ declare global {
         name: string;
         type: string;
         email: string;
-        phone: number;
-        userID: string;
+        phone: string;
+        userId: string;
         detail: {
             bookName: string;
             quantity: number;
@@ -111,6 +111,8 @@ declare global {
         totalPrice: number;
         createdAt: Date;
         updatedAt: Date;
+        paymentStatus: string;
+        paymentRef: string;
     }
 
     interface IOrderTable {
@@ -128,5 +130,7 @@ declare global {
         totalPrice: number;
         createdAt: Date;
         updatedAt: Date;
+        paymentStatus: string;
+        paymentRef: string;
     }
 }
