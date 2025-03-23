@@ -1,4 +1,4 @@
-import {App, Col, Divider, Empty, InputNumber, Row} from "antd";
+import {App, Button, Col, Divider, Empty, InputNumber, Row} from "antd";
 import {useCurrentApp} from "components/context/app.context";
 import {useEffect, useState} from "react";
 import {DeleteTwoTone} from "@ant-design/icons";
@@ -143,7 +143,12 @@ const SeeOrderDetail = (props: IProps) => {
                                  </span>
                             </div>
                             <Divider style={{margin: "10px 0"}}/>
-                            <button onClick={()=>handleNextStep()}>Mua hàng ({carts?.length ?? 0})</button>
+                            <Button
+                                color="danger" variant="solid"
+                                onClick={() => handleNextStep()}
+                            >
+                                Đặt hàng ({carts?.length ?? 0})
+                            </Button>
                         </div>
                     </Col>
                 </Row>

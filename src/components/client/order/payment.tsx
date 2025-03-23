@@ -1,8 +1,9 @@
-import {Col, Divider, Form, FormProps, Input, Radio, Row, Space} from "antd";
+import {App, Button, Col, Divider, Form, FormProps, Input, Radio, Row, Space} from "antd";
 import {useCurrentApp} from "components/context/app.context";
 import {useEffect, useState} from "react";
 import {DeleteTwoTone} from "@ant-design/icons";
 import 'styles/order.scss';
+import {createOrderAPI} from "services/api.ts";
 
 const {TextArea} = Input;
 
@@ -24,9 +25,12 @@ const Payment = (props: IProps) => {
     const {carts, setCarts, user} = useCurrentApp();
 
     const [totalPrice, setTotalPrice] = useState(0);
-    // const [isSubmit, setIsSubmit] = useState<boolean>(false);
+
+    const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
     const [form] = Form.useForm();
+
+    const {message, notification} = App.useApp();
 
     useEffect(() => {
         if (user) {
@@ -53,7 +57,6 @@ const Payment = (props: IProps) => {
     const handleRemoveBook = (_id: string) => {
         const cartStorage = localStorage.getItem("carts");
         if (cartStorage) {
-            //update
             const carts = JSON.parse(cartStorage) as ICart[];
             const newCarts = carts.filter(item => item._id !== _id);
             localStorage.setItem("carts", JSON.stringify(newCarts));
@@ -62,7 +65,27 @@ const Payment = (props: IProps) => {
     }
 
     const handlePlaceOrder: FormProps<FieldType>['onFinish'] = async (values) => {
-        console.log(values);
+        const {address, fullName, phone, method} = values;
+        const detail = carts.map(item => ({
+            _id: item._id,
+            quantity: item.quantity,
+            bookName: item.detail.mainText
+        }));
+        setIsSubmit(true);
+        const res = await createOrderAPI(fullName, address, phone, totalPrice, method, detail);
+        if (res?.data) {
+            localStorage.removeItem("carts");
+            setCarts([]);
+            message.success("Mua hàng thành công!");
+            setCurrentStep(2);
+        } else {
+            notification.error({
+                message: "Có lỗi xảy ra",
+                description: res.message && Array.isArray(res.message) ? res.message[0] : res.message,
+                duration: 5,
+            });
+        }
+        setIsSubmit(false);
     }
 
     return (
@@ -151,7 +174,7 @@ const Payment = (props: IProps) => {
                             rules={[
                                 {required: true, message: 'Số điện thoại không được để trống!'},
                                 {
-                                    pattern: /^[0-9]{10,}$/,
+                                    pattern: /^[0-9]{9,}$/,
                                     message: 'Số điện thoại chỉ được chứa số và phải có ít nhất 10 ký tự!'
                                 },
                             ]}
@@ -189,7 +212,13 @@ const Payment = (props: IProps) => {
                                  </span>
                         </div>
                         <Divider style={{margin: "10px 0"}}/>
-                        <button type="submit">Đặt hàng ({carts?.length ?? 0})</button>
+                        <Button
+                            color="danger" variant="solid"
+                            htmlType="submit"
+                            loading={isSubmit}
+                        >
+                            Thanh toán ({carts?.length ?? 0})
+                        </Button>
                     </div>
                 </Form>
             </Col>

@@ -1,8 +1,9 @@
 import SeeOrderDetail from "components/client/order/see.order.detail";
 import {useState} from "react";
-import {Steps} from "antd";
+import {Button, Result, Steps} from "antd";
 import Payment from "components/client/order/payment.tsx";
 import 'styles/order.scss';
+import {Link} from "react-router-dom";
 
 const OrderPage = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
@@ -28,6 +29,25 @@ const OrderPage = () => {
                 </div>
                 {currentStep === 0 && <SeeOrderDetail setCurrentStep={setCurrentStep}/>}
                 {currentStep === 1 && <Payment setCurrentStep={setCurrentStep}/>}
+                {currentStep === 2 &&
+                    <Result
+                        status="success"
+                        title="Đặt hàng thành công"
+                        subTitle="Hệ thống đã ghi nhận thông tin đơn hàng của bạn."
+                        extra={[
+                            <Button key="home">
+                                <Link to={"/"} type="primary">
+                                    Trang chủ
+                                </Link>
+                            </Button>,
+                            <Button key="history">
+                                <Link to={"/history"} type="primary">
+                                    Lịch sử mua hàng
+                                </Link>
+                            </Button>
+                        ]}
+                    />
+                }
             </div>
         </div>
     )
