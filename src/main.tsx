@@ -18,6 +18,7 @@ import ManageUserPage from "pages/admin/manage.user.tsx";
 import enUS from 'antd/locale/en_US';
 import OrderPage from "pages/client/order.tsx";
 import 'styles/global.scss';
+import HistoryPage from "pages/client/history.tsx";
 
 const router = createBrowserRouter([
     {
@@ -45,10 +46,10 @@ const router = createBrowserRouter([
                 element: <AboutPage/>,
             },
             {
-                path: "checkout",
+                path: "history",
                 element: (
                     <ProtectedRoute>
-                        <div>checkout page</div>
+                        <HistoryPage/>
                     </ProtectedRoute>
                 ),
             }
