@@ -17,6 +17,7 @@ import ManageBookPage from "pages/admin/manage.book.tsx";
 import ManageOrderPage from "pages/admin/manage.order.tsx";
 import ManageUserPage from "pages/admin/manage.user.tsx";
 import enUS from 'antd/locale/en_US';
+import OrderPage from "pages/client/order.tsx";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: "/book/:id",
                 element: <BookPage/>,
+            },
+            {
+                path: "/order",
+                element: <OrderPage/>
             },
             {
                 path: "about",
