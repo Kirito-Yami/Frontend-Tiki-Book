@@ -175,7 +175,7 @@ const Payment = (props: IProps) => {
                                 {required: true, message: 'Số điện thoại không được để trống!'},
                                 {
                                     pattern: /^[0-9]{9,}$/,
-                                    message: 'Số điện thoại chỉ được chứa số và phải có ít nhất 10 ký tự!'
+                                    message: 'Số điện thoại chỉ được chứa số và phải có ít nhất 9 ký tự!'
                                 },
                             ]}
                         >

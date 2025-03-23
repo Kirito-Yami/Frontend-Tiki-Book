@@ -37,7 +37,7 @@ const AppProvider = (props: IProps) => {
                     setCarts(JSON.parse(carts))
                 }
             }
-            setIsAppLoading(false)
+            setIsAppLoading(false);
         }
         fetchAccount();
     }, [])

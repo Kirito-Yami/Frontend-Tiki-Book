@@ -130,9 +130,12 @@ const UserInfo = () => {
                             labelCol={{span: 24}}
                             label="Email"
                             name="email"
-                            rules={[{required: true, message: 'Email không được để trống!'}]}
+                            rules={[
+                                {required: true, message: 'Email không được để trống!'},
+                                {type: "email", message: "Email không đúng định dạng!"}
+                            ]}
                         >
-                            <Input disabled/>
+                            <Input disabled style={{borderRadius: "5px", height: "40px"}} placeholder="Nhập email..."/>
                         </Form.Item>
                         <Form.Item<FieldType>
                             labelCol={{span: 24}}
@@ -140,15 +143,21 @@ const UserInfo = () => {
                             name="fullName"
                             rules={[{required: true, message: 'Tên hiển thị không được để trống!'}]}
                         >
-                            <Input/>
+                            <Input style={{borderRadius: "5px", height: "40px"}} placeholder="Nhập tên hiển thị..."/>
                         </Form.Item>
                         <Form.Item<FieldType>
                             labelCol={{span: 24}}
                             label="Số điện thoại"
                             name="phone"
-                            rules={[{required: true, message: 'Số điện thoại không được để trống!'}]}
+                            rules={[
+                                {required: true, message: 'Số điện thoại không được để trống!'},
+                                {
+                                    pattern: /^[0-9]{9,}$/,
+                                    message: 'Số điện thoại chỉ được chứa số và phải có ít nhất 9 ký tự!'
+                                },
+                            ]}
                         >
-                            <Input/>
+                            <Input style={{borderRadius: "5px", height: "40px"}} placeholder="Nhập số điện thoại..."/>
                         </Form.Item>
                         <Button loading={isSubmit} onClick={() => form.submit()}>Cập nhật</Button>
                     </Form>
