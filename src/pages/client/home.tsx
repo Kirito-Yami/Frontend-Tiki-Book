@@ -1,23 +1,13 @@
 import {
-    Button,
-    Checkbox,
-    Col,
-    Divider,
-    Form,
-    FormProps,
-    InputNumber,
-    Pagination,
-    Rate,
-    Row, Spin,
-    Tabs,
-    TabsProps
+    Button, Checkbox, Col, Divider, Form, FormProps,
+    InputNumber, Pagination, Rate, Row, Spin, Tabs, TabsProps
 } from "antd";
-import 'styles/home.scss'
 import {FilterTwoTone, ReloadOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {getBooksAPI, getCategoryAPI} from "services/api.ts";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import MobileFilter from "components/client/book/mobile.filter.tsx";
+import 'styles/home.scss';
 
 interface FieldType {
     fullName: string;
@@ -32,6 +22,8 @@ interface FieldType {
 }
 
 const HomePage = () => {
+    const [searchTerm] = useOutletContext() as any;
+
     const [listCategory, setListCategory] = useState<{
         label: string;
         value: string;
@@ -75,13 +67,16 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchBook();
-    }, [current, pageSize, filter, sortQuery]);
+    }, [current, pageSize, filter, sortQuery, searchTerm]);
 
     const fetchBook = async () => {
         setIsLoading(true);
         let query = `current=${current}&pageSize=${pageSize}`;
         if (filter) {
             query += `&${filter}`;
+        }
+        if(searchTerm) {
+            query += `&mainText=/${searchTerm}/i`;
         }
         if (sortQuery) {
             query += `&${sortQuery}`;
@@ -153,7 +148,7 @@ const HomePage = () => {
     return (
         <>
             <div style={{background: "#efefef", padding: "20px 0"}}>
-                <div className="homepage" style={{maxWidth: 1440, margin: "0px auto"}}>
+                <div className="homepage" style={{maxWidth: 1440, margin: "0px auto", overflow: 'hidden'}}>
                     <Row gutter={[20, 20]}>
                         <Col md={4} sm={0} xs={0}>
                             <div style={{padding: "20px", background: "#fff", borderRadius: 5}}>
@@ -211,7 +206,7 @@ const HomePage = () => {
                                                 </Form.Item>
                                             </Col>
                                             <Col xl={2} md={24}>
-                                                <div> - </div>
+                                                <div> -</div>
                                             </Col>
                                             <Col xl={11} md={24}>
                                                 <Form.Item name={["range", 'to']}>
@@ -278,10 +273,10 @@ const HomePage = () => {
                                             style={{overflowX: "auto"}}
                                         />
                                         <Col xs={24} md={0}>
-                                            <div style={{ marginBottom: 20 }} >
+                                            <div style={{marginBottom: 20}}>
                                                 <span onClick={() => setShowMobileFilter(true)}>
-                                                    <FilterTwoTone />
-                                                    <span style={{ fontWeight: 500 }}> Lọc</span>
+                                                    <FilterTwoTone/>
+                                                    <span style={{fontWeight: 500}}> Lọc</span>
                                                 </span>
                                             </div>
                                         </Col>

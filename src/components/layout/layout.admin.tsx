@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useCurrentApp} from "components/context/app.context.tsx";
 import {logoutAPI} from "services/api.ts";
-import {Link, Outlet} from "react-router-dom";
+import {Link, Outlet, useLocation} from "react-router-dom";
 import {
     AppstoreOutlined,
     DollarCircleOutlined,
@@ -16,42 +16,52 @@ type MenuItem = Required<MenuProps>['items'][number];
 const {Content, Footer, Sider} = Layout;
 
 const LayoutAdmin = () => {
+    const {user, setUser, setIsAuthenticated, isAuthenticated, setCarts} = useCurrentApp();
+
     const [collapsed, setCollapsed] = useState(false);
-    const [activeMenu, setActiveMenu] = useState('dashboard');
-    const {user, setUser, setIsAuthenticated, isAuthenticated} = useCurrentApp();
+
+    const [activeMenu, setActiveMenu] = useState('');
+
+    const location = useLocation();
+
+    const items: MenuItem[] = [
+        {
+            label: <Link to='/admin'>Dashboard</Link>,
+            key: '/admin',
+            icon: <AppstoreOutlined/>
+        },
+        {
+            label: <Link to='/admin/user'>Manage User</Link>,
+            key: '/admin/user',
+            icon: <TeamOutlined/>,
+        },
+        {
+            label: <Link to='/admin/book'>Manage Books</Link>,
+            key: '/admin/book',
+            icon: <ExceptionOutlined/>
+        },
+        {
+            label: <Link to='/admin/order'>Manage Orders</Link>,
+            key: '/admin/order',
+            icon: <DollarCircleOutlined/>
+        },
+    ];
+
+    useEffect(() => {
+        const active: any = items.find(item => location.pathname === (item!.key)) ?? "/admin";
+        setActiveMenu(active.key)
+    }, [location]);
 
     const handleLogout = async () => {
         const res = await logoutAPI();
         if (res.data) {
             setUser(null);
+            setCarts([]);
             setIsAuthenticated(false);
             localStorage.removeItem("access_token");
+            localStorage.removeItem("carts")
         }
     }
-
-    const items: MenuItem[] = [
-        {
-            label: <Link to='/admin'>Dashboard</Link>,
-            key: 'dashboard',
-            icon: <AppstoreOutlined/>
-        },
-        {
-            label: <Link to='/admin/user'>Manage User</Link>,
-            key: 'user',
-            icon: <TeamOutlined/>,
-        },
-        {
-            label: <Link to='/admin/book'>Manage Books</Link>,
-            key: 'book',
-            icon: <ExceptionOutlined/>
-        },
-        {
-            label: <Link to='/admin/order'>Manage Orders</Link>,
-            key: 'order',
-            icon: <DollarCircleOutlined/>
-        },
-
-    ];
 
     const itemsDropdown = [
         {
@@ -74,12 +84,15 @@ const LayoutAdmin = () => {
         },
 
     ];
+
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
     if (!isAuthenticated) {
         return (
             <Outlet/>
         )
     }
+
     const isAdminRoute = location.pathname.includes("admin");
     if (isAuthenticated && isAdminRoute) {
         const role = user?.role;
@@ -89,6 +102,7 @@ const LayoutAdmin = () => {
             )
         }
     }
+
     return (
         <>
             <Layout
@@ -104,7 +118,7 @@ const LayoutAdmin = () => {
                         Admin
                     </div>
                     <Menu
-                        defaultSelectedKeys={[activeMenu]}
+                        selectedKeys={[activeMenu]}
                         mode="inline"
                         items={items}
                         onClick={(e) => setActiveMenu(e.key)}

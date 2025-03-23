@@ -2,6 +2,7 @@ import {App, Button, Col, Divider, Empty, InputNumber, Row} from "antd";
 import {useCurrentApp} from "components/context/app.context";
 import {useEffect, useState} from "react";
 import {DeleteTwoTone} from "@ant-design/icons";
+import {isMobile} from 'react-device-detect';
 import 'styles/order.scss';
 
 interface IProps {
@@ -72,46 +73,80 @@ const SeeOrderDetail = (props: IProps) => {
 
     return (
         <div style={{background: '#efefef', padding: '20px 0'}}>
-            <div className="order-container" style={{maxWidth: 1440, margin: '0 auto'}}>
+            <div className="order-container" style={{maxWidth: 1440, margin: '0 auto', overflow: 'hidden'}}>
                 <Row gutter={[20, 20]}>
                     <Col md={18} xs={24}>
                         {carts?.map((item, index) => {
                             const currentBookPrice = item?.detail?.price ?? 0;
                             return (
-                                <div className="order-book" key={`index-${index}`}>
-                                    <div className="book-content">
-                                        <img
-                                            src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`}
-                                            alt={item?.detail?.thumbnail}/>
-                                        <div className="title">
-                                            {item?.detail?.mainText}
-                                        </div>
-                                        <div className="price">
-                                            {new Intl.NumberFormat('vi-VN', {
+                                <div className="order-book" key={`index-${index}`}
+                                     style={isMobile ? {flexDirection: 'column'} : {}}
+                                >
+                                    {!isMobile ?
+                                        <>
+                                            <div className="book-content">
+                                                <img
+                                                    src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`}
+                                                    alt={item?.detail?.thumbnail}/>
+                                                <div className="title">
+                                                    {item?.detail?.mainText}
+                                                </div>
+                                                <div className="price">
+                                                    {new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(currentBookPrice)}
+                                                </div>
+                                            </div>
+                                            <div className="action">
+                                                <div className="quantity">
+                                                    <InputNumber
+                                                        onChange={(value) => handleOnChangeInput(value as number, item.detail)}
+                                                        value={item.quantity}
+                                                    />
+                                                </div>
+                                                <div className="sum">
+                                                    Tổng: {new Intl.NumberFormat('vi-VN', {
+                                                    style: 'currency',
+                                                    currency: 'VND'
+                                                }).format(currentBookPrice * (item.quantity ?? 0))}
+                                                </div>
+                                                <DeleteTwoTone
+                                                    style={{cursor: "pointer"}}
+                                                    onClick={() => handleRemoveBook(item._id)}
+                                                    twoToneColor="#eb2f96"
+                                                />
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                            <div>{item?.detail?.mainText}</div>
+                                            <div className='book-content ' style={{width: "100%"}}>
+                                                <img
+                                                    src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`}
+                                                    alt={item?.detail?.thumbnail}/>
+                                                <div className='action'>
+                                                    <div className='quantity'>
+                                                        <InputNumber
+                                                            onChange={(value) => handleOnChangeInput(value as number, item.detail)}
+                                                            value={item.quantity}
+                                                        />
+                                                    </div>
+                                                    <DeleteTwoTone
+                                                        style={{cursor: "pointer"}}
+                                                        onClick={() => handleRemoveBook(item._id)}
+                                                        twoToneColor="#eb2f96"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='sum'>
+                                                Tổng: {new Intl.NumberFormat('vi-VN', {
                                                 style: 'currency',
                                                 currency: 'VND'
-                                            }).format(currentBookPrice)}
-                                        </div>
-                                    </div>
-                                    <div className="action">
-                                        <div className="quantity">
-                                            <InputNumber
-                                                onChange={(value) => handleOnChangeInput(value as number, item.detail)}
-                                                value={item.quantity}
-                                            />
-                                        </div>
-                                        <div className="sum">
-                                            Tổng: {new Intl.NumberFormat('vi-VN', {
-                                            style: 'currency',
-                                            currency: 'VND'
-                                        }).format(currentBookPrice * (item.quantity ?? 0))}
-                                        </div>
-                                        <DeleteTwoTone
-                                            style={{cursor: "pointer"}}
-                                            onClick={() => handleRemoveBook(item._id)}
-                                            twoToneColor="#eb2f96"
-                                        />
-                                    </div>
+                                            }).format(currentBookPrice * (item?.quantity ?? 0))}
+                                            </div>
+                                        </>
+                                    }
                                 </div>
                             )
                         })}
@@ -126,21 +161,21 @@ const SeeOrderDetail = (props: IProps) => {
                             <div className="calculate">
                                 <span>Tạm tính:</span>
                                 <span>
-                                     {new Intl.NumberFormat('vi-VN', {
-                                         style: 'currency',
-                                         currency: 'VND'
-                                     }).format(totalPrice || 0)}
-                                 </span>
+                                    {new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(totalPrice || 0)}
+                                </span>
                             </div>
                             <Divider style={{margin: "10px 0"}}/>
                             <div className="calculate">
                                 <span>Tổng tiền:</span>
                                 <span className="sum-final">
-                                     {new Intl.NumberFormat('vi-VN', {
-                                         style: 'currency',
-                                         currency: 'VND'
-                                     }).format(totalPrice || 0)}
-                                 </span>
+                                    {new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(totalPrice || 0)}
+                                </span>
                             </div>
                             <Divider style={{margin: "10px 0"}}/>
                             <Button

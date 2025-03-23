@@ -150,7 +150,7 @@ const uploadFileAPI = (fileImg: any, folder: string) => {
 const createOrderAPI = (
     name: string, address: string,
     phone: number, totalPrice: number,
-    type: string, detail: { _id: string; quantity: number; bookName: string }[]
+    type: string, detail: object[]
 ) => {
     const data = {name, address, phone, totalPrice, type, detail};
     const urlBackend = `/api/v1/order`;

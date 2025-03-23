@@ -6,15 +6,23 @@ import {VscSearchFuzzy} from "react-icons/vsc";
 import {Avatar, Badge, Divider, Drawer, Dropdown, Empty, Popover, Space} from "antd";
 import {FiShoppingCart} from "react-icons/fi";
 import {FaReact} from "react-icons/fa";
-import 'styles/app.header.scss'
 import ManageAccount from "components/client/account/manage.account.tsx";
+import {isMobile} from 'react-device-detect';
+import 'styles/app.header.scss';
 
-const AppHeader = () => {
+interface IProps {
+    searchTerm: string;
+    setSearchTerm: (value: string) => void;
+}
+
+const AppHeader = (props: IProps) => {
+    const {searchTerm, setSearchTerm} = props;
+
+    const {user, setUser, isAuthenticated, setIsAuthenticated, carts, setCarts} = useCurrentApp();
+
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const [openManageAccount, setOpenManageAccount] = useState<boolean>(false);
-
-    const {isAuthenticated, user, setUser, setIsAuthenticated, carts} = useCurrentApp();
 
     const navigate = useNavigate();
 
@@ -22,10 +30,13 @@ const AppHeader = () => {
         const res = await logoutAPI();
         if (res.data) {
             setUser(null);
+            setCarts([]);
             setIsAuthenticated(false);
             localStorage.removeItem("access_token");
+            localStorage.removeItem('carts');
         }
     }
+
     const items = [
         {
             label: <label
@@ -47,13 +58,16 @@ const AppHeader = () => {
         },
 
     ];
+
     if (user?.role === 'ADMIN') {
         items.unshift({
             label: <Link to='/admin'>Trang quản trị</Link>,
             key: 'admin',
         })
     }
+
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
     const contentPopover = () => {
         return (
             <div className='pop-cart-body'>
@@ -86,6 +100,7 @@ const AppHeader = () => {
             </div>
         )
     }
+
     return (
         <>
             <div className='header-container'>
@@ -102,10 +117,11 @@ const AppHeader = () => {
                                  <VscSearchFuzzy className='icon-search'/>
                              </span>
                             <input
-                                className="input-search" type={'text'}
+                                className="input-search"
+                                type={'text'}
                                 placeholder="Bạn tìm gì hôm nay"
-                                // value={props.searchTerm}
-                                // onChange={(e) => props.setSearchTerm(e.target.value)}
+                                value={searchTerm}
+                                onChange={(event) => setSearchTerm(event.target.value)}
                             />
                         </div>
 
@@ -113,21 +129,32 @@ const AppHeader = () => {
                     <nav className="page-header__bottom">
                         <ul id="navigation" className="navigation">
                             <li className="navigation__item">
-                                <Popover
-                                    className="popover-carts"
-                                    placement="topRight"
-                                    rootClassName="popover-carts"
-                                    title={"Sản phẩm mới thêm"}
-                                    content={contentPopover}
-                                    arrow={true}>
+                                {!isMobile ?
+                                    <Popover
+                                        className="popover-carts"
+                                        placement="topRight"
+                                        rootClassName="popover-carts"
+                                        title={"Sản phẩm mới thêm"}
+                                        content={contentPopover}
+                                        arrow={true}>
+                                        <Badge
+                                            count={carts?.length ?? 0}
+                                            size={"small"}
+                                            showZero
+                                        >
+                                            <FiShoppingCart className='icon-cart'/>
+                                        </Badge>
+                                    </Popover>
+                                    :
                                     <Badge
                                         count={carts?.length ?? 0}
                                         size={"small"}
                                         showZero
+                                        onClick={() => navigate("/order")}
                                     >
                                         <FiShoppingCart className='icon-cart'/>
                                     </Badge>
-                                </Popover>
+                                }
                             </li>
                             <li className="navigation__item mobile"><Divider type='vertical'/></li>
                             <li className="navigation__item mobile">

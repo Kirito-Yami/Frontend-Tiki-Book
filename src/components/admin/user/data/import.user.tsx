@@ -43,7 +43,7 @@ const ImportUser = (props: IProps) => {
         async onChange(info) {
             const {status} = info.file;
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
+                //TODO
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
@@ -87,8 +87,8 @@ const ImportUser = (props: IProps) => {
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
-        onDrop(e) {
-            console.log('Dropped files', e.dataTransfer.files);
+        onDrop() {
+            //TODO
         },
     };
 
