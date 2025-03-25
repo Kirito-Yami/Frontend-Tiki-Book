@@ -17,9 +17,10 @@ import ManageOrderPage from "pages/admin/manage.order.tsx";
 import ManageUserPage from "pages/admin/manage.user.tsx";
 import enUS from 'antd/locale/en_US';
 import OrderPage from "pages/client/order.tsx";
-import 'styles/global.scss';
 import HistoryPage from "pages/client/history.tsx";
 import ReturnURLPage from "components/client/order/return.url.tsx";
+import 'styles/global.scss';
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 const router = createBrowserRouter([
     {
@@ -117,9 +118,11 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <App>
             <AppProvider>
-                <ConfigProvider locale={enUS}>
-                    <RouterProvider router={router}/>
-                </ConfigProvider>
+                <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                    <ConfigProvider locale={enUS}>
+                        <RouterProvider router={router}/>
+                    </ConfigProvider>
+                </GoogleOAuthProvider>
             </AppProvider>
         </App>
     </StrictMode>

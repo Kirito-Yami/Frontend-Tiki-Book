@@ -24,9 +24,7 @@
 🛠️ [Hỗ trợ kỹ thuật](https://sandbox.vnpayment.vn/apis/contact/)
 
 #### **4.2. Hướng dẫn đăng nhập OAuth**
-🔹 **Google**: Tạo `client-id` và `client-secret` tại [Google Developers Console](https://console.developers.google.com/)
-
-🔹 **GitHub**: Tạo `client-id` và `client-secret` tại [GitHub Developers](https://github.com/settings/developers/)
+🔹 **Google**: Tạo `client-id` tại [Google Developers Console](https://console.developers.google.com/)
 
 #### **4.3. Tài khoản test**
 📧 **Username**: `admin@gmail.com`  

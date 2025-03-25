@@ -14,6 +14,12 @@ const loginAPI = (username: string, password: string) => {
     });
 }
 
+const loginWithGoogleAPI = (type: string, email: string) => {
+    const data = {type, email};
+    const urlBackend = "/api/v1/auth/social-media";
+    return axios.post<IBackendRes<ILogin>>(urlBackend, data);
+}
+
 const registerAPI = (fullName: string, email: string, password: string, phone: number) => {
     const urlBackend = "/api/v1/user/register";
     const data = {fullName, email, password, phone}
@@ -196,5 +202,5 @@ export {
     createUserAPI, updateUserAPI, updateUserInfoAPI, updateUserPasswordAPI, deleteUserAPI, bulkCreateUserAPI,
     getBooksAPI, getCategoryAPI, createBookAPI, uploadFileAPI, updateBookAPI,
     deleteBookAPI, getBookByIdAPI, createOrderAPI, getHistoryAPI, getOrdersAPI, getDashboardAPI,
-    getVNPayUrlAPI, updatePaymentOrderAPI
+    getVNPayUrlAPI, updatePaymentOrderAPI, loginWithGoogleAPI
 }
